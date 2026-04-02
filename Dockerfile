@@ -22,4 +22,4 @@ COPY --chown=user . .
 USER user
 
 # Default entry point running validation baseline inference upon Docker run
-CMD ["python", "inference.py"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
