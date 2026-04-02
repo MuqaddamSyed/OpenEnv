@@ -1,0 +1,24 @@
+name: customer_support_triage
+version: 1.0.0
+description: A simulated customer support environment where an agent handles support tickets of varying difficulty (classification, policy application, complex resolution and refund).
+author: AntiGravity
+license: Apache-2.0
+
+tasks:
+  - id: easy_classification
+    difficulty: easy
+    description: Classify a support ticket into the correct category.
+  - id: medium_policy
+    difficulty: medium
+    description: Decide whether a user is eligible for a refund based on checking a mocked internal policy.
+  - id: hard_escalation
+    difficulty: hard
+    description: Handle a furious escalated ticket, apologize, and properly resolve the issue using multiple mock APIs.
+
+action_space:
+  type: typed_pydantic
+  model: env.Action
+
+observation_space:
+  type: typed_pydantic
+  model: env.Observation
