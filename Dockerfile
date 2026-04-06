@@ -22,4 +22,4 @@ COPY --chown=user . .
 USER user
 
 # Default entry point running validation baseline inference upon Docker run
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]
