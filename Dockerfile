@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Hugging Face Space requirements and general best practices
 ENV DEBIAN_FRONTEND=noninteractive
