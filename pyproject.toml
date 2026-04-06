@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "customer_support_triage"
 version = "1.0.0"
 description = "A simulated customer support environment"
+requires-python = ">=3.10"
 authors = [
   { name="AntiGravity" }
 ]
@@ -14,5 +15,9 @@ dependencies = [
     "openai>=1.0.0",
     "pyyaml>=6.0.0",
     "fastapi>=0.100.0",
-    "uvicorn>=0.23.0"
+    "uvicorn>=0.23.0",
+    "openenv-core>=0.2.0"
 ]
+
+[project.scripts]
+server = "server.app:start"
