@@ -18,13 +18,13 @@ def run_task(task_id: str, difficulty: str):
 
     print(f"[START] task={task_id}", flush=True)
 
-    api_key = os.environ.get("OPENAI_API_KEY", os.environ.get("HF_TOKEN"))
-    base_url = os.environ.get("API_BASE_URL", "https://api.openai.com/v1")
-    model_name = os.environ.get("MODEL_NAME", "gpt-4-turbo")
+    API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
+    MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4-turbo")
+    HF_TOKEN = os.getenv("HF_TOKEN")
 
     step_num = 0
 
-    if not api_key:
+    if not HF_TOKEN:
         # Fallback: hardcoded logical actions when no LLM key is available
         if difficulty == "easy":
             action = Action(tool="categorize", arguments={"category": "cancellation"})
@@ -66,7 +66,7 @@ def run_task(task_id: str, difficulty: str):
             return reward.score
 
     # LLM-powered path
-    client = OpenAI(api_key=api_key, base_url=base_url)
+    client = OpenAI(api_key=HF_TOKEN, base_url=API_BASE_URL)
 
     system_prompt = """You are a customer support agent.
 Your goal is to solve the user's ticket by outputting EXACTLY a JSON action object.
@@ -101,7 +101,7 @@ Rules: You MUST ONLY output standard JSON, without any markdown formatting wrapp
         for attempt in range(3):
             try:
                 response = client.chat.completions.create(
-                    model=model_name, messages=messages, temperature=0.0
+                    model=MODEL_NAME, messages=messages, temperature=0.0
                 )
                 raw_action = response.choices[0].message.content.strip()
 
