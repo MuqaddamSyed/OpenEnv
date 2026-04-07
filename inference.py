@@ -97,23 +97,28 @@ Rules: You MUST ONLY output standard JSON, without any markdown formatting wrapp
             {"role": "user", "content": f"Current Observation:\n{obs_str}\nWhat is your next action JSON?"}
         )
 
-        try:
-            response = client.chat.completions.create(
-                model=model_name, messages=messages, temperature=0.0
-            )
-            raw_action = response.choices[0].message.content.strip()
+        action = None
+        for attempt in range(3):
+            try:
+                response = client.chat.completions.create(
+                    model=model_name, messages=messages, temperature=0.0
+                )
+                raw_action = response.choices[0].message.content.strip()
 
-            # Clean possible markdown block
-            if raw_action.startswith("```"):
-                raw_action = raw_action.split("```")[1]
-                if raw_action.startswith("json"):
-                    raw_action = raw_action[4:]
+                # Clean possible markdown block
+                if raw_action.startswith("```"):
+                    raw_action = raw_action.split("```")[1]
+                    if raw_action.startswith("json"):
+                        raw_action = raw_action[4:]
 
-            action_dict = json.loads(raw_action.strip())
-            action = Action(tool=action_dict["tool"], arguments=action_dict.get("arguments", {}))
+                action_dict = json.loads(raw_action.strip())
+                action = Action(tool=action_dict["tool"], arguments=action_dict.get("arguments", {}))
+                break  # success
 
-        except Exception as e:
-            print(f"LLM/Parse error: {e}", file=sys.stderr)
+            except Exception as e:
+                print(f"LLM/Parse error (attempt {attempt + 1}/3): {e}", file=sys.stderr)
+
+        if action is None:
             action = Action(tool="submit", arguments={})
 
         messages.append({"role": "assistant", "content": json.dumps(action.model_dump())})

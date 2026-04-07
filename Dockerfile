@@ -12,14 +12,16 @@ ENV HOME=/home/user \
 
 WORKDIR $HOME/app
 
-COPY --chown=user requirements.txt .
+# Install dependencies first (better layer caching)
+COPY --chown=user requirements.txt pyproject.toml ./
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -e .
 
 # Copy codebase
 COPY --chown=user . .
 
 USER user
 
-# Default entry point running validation baseline inference upon Docker run
+# Default entry point
 CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]
