@@ -24,6 +24,10 @@ class State(BaseModel):
     action_history: List[str]
     internal_state: Dict[str, Any]
 
+# Validator requires scores strictly in (0, 1) — not 0.0 or 1.0
+def _clamp(score: float) -> float:
+    return max(0.01, min(0.99, score))
+
 class CustomerSupportEnv:
     def __init__(self, task_difficulty: str = "easy"):
         self.task_difficulty = task_difficulty
@@ -88,7 +92,7 @@ class CustomerSupportEnv:
 
     def step(self, action: Action) -> Tuple[Observation, Reward, bool, Dict[str, Any]]:
         if self.resolved:
-            return self._get_obs(), Reward(score=self.final_score), True, {}
+            return self._get_obs(), Reward(score=_clamp(self.final_score)), True, {}
             
         self.step_count += 1
         self.action_history.append(action.tool)
@@ -99,9 +103,9 @@ class CustomerSupportEnv:
         # Penalize for infinite loops / taking too long
         if self.step_count > 10:
             self.resolved = True
-            self.final_score = 0.0
+            self.final_score = _clamp(0.0)
             self.system_messages.append("Max steps reached. Failure.")
-            return self._get_obs(), Reward(score=0.0), True, {"error": "max_steps"}
+            return self._get_obs(), Reward(score=_clamp(0.0)), True, {"error": "max_steps"}
 
         tool = action.tool
         args = action.arguments
@@ -202,4 +206,4 @@ class CustomerSupportEnv:
                     self.system_messages.append("Task hard submitted.")
 
         self.resolved = done
-        return self._get_obs(), Reward(score=reward_value), done, {"action_history": self.action_history}
+        return self._get_obs(), Reward(score=_clamp(reward_value)), done, {"action_history": self.action_history}
