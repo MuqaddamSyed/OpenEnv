@@ -19,7 +19,7 @@ def run_task(task_id: str, difficulty: str):
     print(f"[START] task={task_id}", flush=True)
 
     API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
-    MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4-turbo")
+    MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o")
     HF_TOKEN = os.getenv("HF_TOKEN")
 
     step_num = 0
