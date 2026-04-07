@@ -41,9 +41,9 @@ Agent must return standard **JSON actions**, wrapped in `Action` typed model:
    ```
 3. Set your environment variables (Required for inference):
    ```bash
-   export MODEL_NAME="gpt-4"
    export API_BASE_URL="https://api.openai.com/v1"
-   export OPENAI_API_KEY="sk-..." # Or export HF_TOKEN="..."
+   export MODEL_NAME="gpt-4o"
+   export HF_TOKEN="your-token-here"
    ```
 4. Run inference locally:
    ```bash
@@ -54,11 +54,11 @@ Agent must return standard **JSON actions**, wrapped in `Action` typed model:
 To run inside a containerized setup compliant with HF Spaces:
 ```bash
 docker build -t openenv_support .
-docker run --env OPENAI_API_KEY=$OPENAI_API_KEY openenv_support
+docker run --env HF_TOKEN=$HF_TOKEN openenv_support
 ```
 
 ## Baseline Model Scores
-Tested against **`gpt-4-turbo`**:
+Tested against **`gpt-4o`**:
 - **Easy Task**: 1.0 / 1.0
 - **Medium Task**: 1.0 / 1.0
 - **Hard Task**: 1.0 / 1.0
