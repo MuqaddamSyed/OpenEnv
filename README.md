@@ -59,8 +59,8 @@ docker run --env HF_TOKEN=$HF_TOKEN openenv_support
 
 ## Baseline Model Scores
 Tested against **`gpt-4o`**:
-- **Easy Task**: 1.0 / 1.0
-- **Medium Task**: 1.0 / 1.0
-- **Hard Task**: 1.0 / 1.0
+- **Easy Task**: 0.99 / 1.0
+- **Medium Task**: 0.99 / 1.0
+- **Hard Task**: 0.99 / 1.0
 
 The baseline accurately demonstrates deterministic environment execution through multi-step capabilities with meaningful partial reinforcement signals in case of failure.
